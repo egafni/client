@@ -19,7 +19,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-__version__ = "0.12.1.dev1"
+__version__ = "0.12.5.dev1"
 
 # Used with pypi checks and other messages related to pip
 _wandb_module = "wandb"
@@ -79,13 +79,12 @@ from wandb.data_types import JoinedTable
 
 from wandb.wandb_agent import agent
 
-from wandb import superagent
-
 # from wandb.core import *
 from wandb.viz import visualize
 from wandb import plot
 from wandb import plots  # deprecating this
 from wandb.integration.sagemaker import sagemaker_auth
+from wandb.sdk.internal import profiler
 
 
 # Used to make sure we don't use some code in the incorrect process context
@@ -187,6 +186,15 @@ def set_trace():
     #  frame = sys._getframe().f_back
     pdb.set_trace()  # TODO: pass the parent stack...
 
+
+def load_ipython_extension(ipython):
+    ipython.register_magics(wandb.jupyter.WandBMagics)
+
+
+if wandb_sdk.lib.ipython.in_jupyter():
+    from IPython import get_ipython
+
+    load_ipython_extension(get_ipython())
 
 __all__ = [
     "__version__",
